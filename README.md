@@ -1,6 +1,7 @@
 # Web UI Test Automation with Cucumber, Selenium, and Gradle (Java)
 
 ## Struktur Proyek
+```
 .
 ├── build.gradle
 ├── report/
@@ -24,7 +25,7 @@
 │               ├── login.feature
 │               └── inventory.feature
 └── README.md
-
+```
 ## Teknologi yang digunakan
 * Java
 * Selenium WebDriver
