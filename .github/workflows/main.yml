@@ -30,8 +30,8 @@ jobs:
         distribution: 'temurin'
         
     # Setup Web 
-    - name: Setup Chrome
-      uses: browser-actions/setup-chrome@v2.1.0
+    - name: Setup Firefox
+      uses: browser-actions/setup-firefox@v1.7.0
 
     # Setup Gradlew
     - name: Setup gradlew
