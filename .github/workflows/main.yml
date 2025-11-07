@@ -43,7 +43,7 @@ jobs:
     # Execute gradle cucumber
     - name: Execute Test
       run: |
-          ./gradlew clean cucumber || true
+          ./gradlew clean test || true
 
     # Generate Allure Report
     - name: Allure Report with history
@@ -78,7 +78,7 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages
-        publish_dir: build/allure-report
+        publish_dir: allure-history
     
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
