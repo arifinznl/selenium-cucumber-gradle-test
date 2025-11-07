@@ -45,8 +45,9 @@ task cucumber() {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
             args = [
-                    '--plugin', 'html:report/test-report.html',
                     '--plugin', 'pretty',
+                    '--plugin', 'html:report/test-report.html',
+                    '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm',
                     '--glue', 'com.zaenal',
                     '--tags', "${tags}",
                     'src/test/resources'
