@@ -39,31 +39,41 @@ public class InventoryPage {
     //locator dinamis
     public void addProductToCart(String productName) {
         By addButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
-        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(addButton));
-        button.click();
+        // Klik tombol add
+        wait.until(ExpectedConditions.elementToBeClickable(addButton)).click();
 
-        // Tunggu button berubah menjadi "Remove"
-        wait.until(ExpectedConditions.textToBePresentInElement(button, "Remove"));
+        // Tunggu tombol berubah menjadi "Remove"
+        wait.until(driver -> {
+            WebElement button = driver.findElement(addButton);
+            return button.getText().equalsIgnoreCase("Remove");
+        });
 
-        // Tunggu badge muncul (optional tambahan safety)
+        // Tunggu badge muncul & update count
         wait.until(driver -> {
             List<WebElement> badges = driver.findElements(cartBadge);
-            return !badges.isEmpty() && !badges.get(0).getText().isEmpty();
+            if (badges.isEmpty()) return false;
+            try {
+                return Integer.parseInt(badges.get(0).getText()) > 0;
+            } catch (NumberFormatException e) {
+                return false;
+            }
         });
     }
 
     public void removeProductFromCart(String productName) {
         By removeButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
-        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(removeButton));
-        button.click();
+        // Klik tombol remove
+        wait.until(ExpectedConditions.elementToBeClickable(removeButton)).click();
 
-        // Tunggu button berubah menjadi "Add to cart"
-        wait.until(ExpectedConditions.textToBePresentInElement(button, "Add to cart"));
-
-        // Tunggu badge hilang atau nol
+        // Tunggu badge hilang atau kosong
         wait.until(driver -> {
             List<WebElement> badges = driver.findElements(cartBadge);
-            return badges.isEmpty() || badges.get(0).getText().equals("0");
+            if (badges.isEmpty()) return true;
+            try {
+                return Integer.parseInt(badges.get(0).getText()) == 0;
+            } catch (NumberFormatException e) {
+                return true;
+            }
         });
     }
 
