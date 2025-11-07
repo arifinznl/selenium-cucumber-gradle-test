@@ -73,17 +73,24 @@ public class InventoryPage {
 
     //validasi item keranjang
     public void validateCartBadge(String expectedCount) {
-        boolean badgeUpdated = wait.until(driver -> {
-        List<WebElement> badges = driver.findElements(cartBadge);
-        if (badges.isEmpty()) return expectedCount.equals("0");
-        return badges.get(0).getText().equals(expectedCount);
-    });
-    assertTrue(badgeUpdated, "Cart badge count mismatch");
+        wait.until(driver -> {
+            List<WebElement> badges = driver.findElements(cartBadge);
+            if (badges.isEmpty()) return expectedCount.equals("0"); // kosong -> 0
+            try {
+                return badges.get(0).getText().equals(expectedCount);
+            } catch (Exception e) {
+            return false;
+            }
+        });
     }
 
     public void validateCartBadgeNotVisible() {
-        List<WebElement> badges = driver.findElements(cartBadge);
-        boolean invisible = badges.isEmpty() || badges.get(0).getText().equals("0");
+        boolean invisible = wait.until(driver -> {
+            List<WebElement> badges = driver.findElements(cartBadge);
+            if (badges.isEmpty()) return true; // benar-benar tidak ada
+            String text = badges.get(0).getText().trim();
+            return text.isEmpty() || text.equals("0");
+        });
         assertTrue(invisible, "Cart badge should not be visible or zero");
     }
 }
