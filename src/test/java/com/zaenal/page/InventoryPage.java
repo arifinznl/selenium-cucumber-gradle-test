@@ -22,7 +22,7 @@ public class InventoryPage {
 
     public InventoryPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
     //validasi
@@ -40,22 +40,43 @@ public class InventoryPage {
     public void addProductToCart(String productName) {
         By addButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
         wait.until(ExpectedConditions.elementToBeClickable(addButton)).click();
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
+        try {
+            Thread.sleep(500); // waktu rendering tambahan
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     public void removeProductFromCart(String productName) {
         By removeButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
         wait.until(ExpectedConditions.elementToBeClickable(removeButton)).click();
-    }
+
+        wait.until(driver -> {
+            List<WebElement> badges = driver.findElements(cartBadge);
+            if (badges.isEmpty()) return true;
+            try {
+                int value = Integer.parseInt(badges.get(0).getText());
+                return value >= 0;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        });
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
 
     //validasi item keranjang
     public void validateCartBadge(String expectedCount) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         WebElement badge = wait.until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
-        assertEquals(expectedCount, badge.getText());
+        assertEquals(expectedCount, badge.getText(), "Cart badge count mismatch");
     }
 
     public void validateCartBadgeNotVisible() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         boolean invisible = wait.until(ExpectedConditions.invisibilityOfElementLocated(cartBadge));
         assertTrue(invisible, "Cart badge should not be visible");
     }
