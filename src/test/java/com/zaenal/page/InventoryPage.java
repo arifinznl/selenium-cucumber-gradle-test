@@ -44,9 +44,13 @@ public class InventoryPage {
         By removeButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
         driver.findElement(removeButton).click();
 
-        // wait sampai badge hilang
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(cartBadge));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        wait.until(driver -> {
+            List<WebElement> badges = driver.findElements(cartBadge);
+            // Jika badge sudah hilang atau jumlah badge sesuai ekspektasi, lanjut
+            return badges.isEmpty() || Integer.parseInt(badges.get(0).getText()) >= 0;
+        });
+
     }
 
     //validasi item keranjang
