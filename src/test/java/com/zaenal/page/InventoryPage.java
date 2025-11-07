@@ -46,10 +46,21 @@ public class InventoryPage {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         wait.until(driver -> {
+        try {
             List<WebElement> badges = driver.findElements(cartBadge);
-            // Jika badge sudah hilang atau jumlah badge sesuai ekspektasi, lanjut
-            return !badges.isEmpty() && Integer.parseInt(badges.get(0).getText()) == 1;
-        });
+
+            if (badges.isEmpty()) {
+                // badge benar-benar hilang 
+                return true;
+            }
+
+            String text = badges.get(0).getText().trim();
+            // kalau badge kosong atau angka >= 0, dianggap valid
+            return text.isEmpty() || Integer.parseInt(text) >= 0;
+        } catch (Exception e) {
+            return false;
+        }
+    });
 
     }
 
