@@ -21,17 +21,7 @@ public class InventoryPage {
 
     public InventoryPage(WebDriver driver) {
         this.driver = driver;
-    }
-
-    // Utility: ambil jumlah badge
-    public int getCartBadgeCount() {
-        List<WebElement> badges = driver.findElements(cartBadge);
-        if (badges.isEmpty()) return 0;
-        try {
-            return Integer.parseInt(badges.get(0).getText().trim());
-        } catch (NumberFormatException e) {
-            return 0;
-        }
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     //validasi
@@ -48,35 +38,26 @@ public class InventoryPage {
     //locator dinamis
     public void addProductToCart(String productName) {
         By addButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
-        driver.findElement(addButton).click();
-        // Tunggu badge berubah
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-            .until(d -> getCartBadgeCount() > 0);
+        wait.until(ExpectedConditions.elementToBeClickable(addButton)).click();
     }
 
     public void removeProductFromCart(String productName) {
         By removeButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
-        WebElement removeButton = driver.findElement(By.xpath(removeButtonXpath));
-        
-        int before = getCartBadgeCount(); // baca jumlah sebelum dihapus
-        driver.findElement(removeButton).click();
-
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-            .until(d -> getCartBadgeCount() < before || getCartBadgeCount() == 0);
-
+        wait.until(ExpectedConditions.elementToBeClickable(removeButton)).click();
     }
 
     //validasi item keranjang
     public void validateCartBadge(String expectedCount) {
-        int expected = Integer.parseInt(expectedCount);
-
-    new WebDriverWait(driver, Duration.ofSeconds(10))
-        .until(driver -> getCartBadgeCount() == expected);
-
-    Assertions.assertEquals(expected, getCartBadgeCount());
+        wait.until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
+        WebElement badge = driver.findElement(cartBadge);
+        assertEquals(expectedCount, badge.getText(),
+                "Jumlah item di cart badge tidak sesuai ekspektasi");
     }
 
     public void validateCartBadgeNotVisible() {
-        assertTrue(driver.findElements(cartBadge).isEmpty(), "Cart badge should not be visible");
+        // TImeout untuk menghindari false negative di UI
+        wait.withTimeout(Duration.ofSeconds(2));
+        assertTrue(driver.findElements(cartBadge).isEmpty(),
+                "Cart badge should not be visible");
     }
 }
