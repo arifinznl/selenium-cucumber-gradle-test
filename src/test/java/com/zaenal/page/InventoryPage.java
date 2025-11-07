@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InventoryPage {
     private WebDriver driver;
+    private WebDriverWait wait;
 
     // Locator
     private By productList = By.className("inventory_item");
@@ -50,14 +51,12 @@ public class InventoryPage {
     public void validateCartBadge(String expectedCount) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
         WebElement badge = driver.findElement(cartBadge);
-        assertEquals(expectedCount, badge.getText(),
-                "Jumlah item di cart badge tidak sesuai ekspektasi");
+        assertEquals(expectedCount, badge.getText(), "Jumlah item di cart badge tidak sesuai ekspektasi");
     }
 
     public void validateCartBadgeNotVisible() {
         // TImeout untuk menghindari false negative di UI
         wait.withTimeout(Duration.ofSeconds(2));
-        assertTrue(driver.findElements(cartBadge).isEmpty(),
-                "Cart badge should not be visible");
+        assertTrue(driver.findElements(cartBadge).isEmpty(), "Cart badge should not be visible");
     }
 }
