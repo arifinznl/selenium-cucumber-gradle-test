@@ -42,10 +42,7 @@ jobs:
 
     # Execute gradle cucumber
     - name: Execute Test
-      run: |
-        rm -rf reports/
-        mkdir -p reports/
-        ./gradlew clean cucumber
+      run: ./gradlew clean cucumber
 
     # Generate Allure Report
     - name: Allure Report with history
@@ -63,8 +60,8 @@ jobs:
       with:
         name: cucumber-report
         path: |
-          reports/cucumber.html
-          reports/cucumber.json
+          build/reports/cucumber/cucumber.html
+          build/reports/cucumber/cucumber.json
 
     # Upload Allure report
     - name: Upload Allure Results
