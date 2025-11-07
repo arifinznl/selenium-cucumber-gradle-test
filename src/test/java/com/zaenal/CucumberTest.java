@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
         features = {"src/test/resources"},
         plugin = {"pretty",
                   "html:reports/cucumber.html", 
-                  "json:reports/cucumber.json"
+                  "json:reports/cucumber.json",
                  "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
                  }
 
