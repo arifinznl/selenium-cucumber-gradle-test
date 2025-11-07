@@ -46,7 +46,6 @@ task cucumber() {
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
             args = [
                     '--plugin', 'pretty',
-                    '--plugin', 'html:report/test-report.html',
                     '--plugin', 'html:build/reports/cucumber/cucumber.html',
                     '--plugin', 'json:build/reports/cucumber/cucumber.json',
                     '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm',
