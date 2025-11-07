@@ -16,6 +16,7 @@ public class InventoryPage {
     private WebDriver driver;
     private WebDriverWait wait;
 
+    // Locator
     private By productList = By.className("inventory_item");
     private By cartBadge = By.className("shopping_cart_badge");
 
@@ -24,85 +25,63 @@ public class InventoryPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
-    // Validasi halaman inventory
+    //validasi
     public void validateOnInventoryPage() {
         assertTrue(driver.getCurrentUrl().contains("inventory.html"));
     }
 
-    // Validasi produk muncul
+    //validasi produk muncul
     public void validateProductListVisible() {
         List<WebElement> products = driver.findElements(productList);
         assertTrue(products.size() > 0, "Product list should not be empty");
     }
 
-    // Tambah satu produk ke cart
+    //locator dinamis
     public void addProductToCart(String productName) {
         By addButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
         wait.until(ExpectedConditions.elementToBeClickable(addButton)).click();
+
+        // Tunggu badge muncul dan jumlah badge update
+        wait.until(driver -> {
+            List<WebElement> badges = driver.findElements(cartBadge);
+            if (badges.isEmpty()) return false;
+            try {
+                int value = Integer.parseInt(badges.get(0).getText());
+                return value > 0;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        });
     }
 
-    // Tambah banyak produk sekaligus
-    public void addProductsToCart(List<String> productNames) {
-        for (String product : productNames) {
-            addProductToCart(product);
-        }
-        // Tunggu badge update sesuai jumlah total produk
-        waitForCartBadgeCount(productNames.size());
-    }
-
-    // Hapus satu produk dari cart
     public void removeProductFromCart(String productName) {
         By removeButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
         wait.until(ExpectedConditions.elementToBeClickable(removeButton)).click();
+
+        // Tunggu badge hilang atau kosong
+        wait.until(driver -> {
+            List<WebElement> badges = driver.findElements(cartBadge);
+            if (badges.isEmpty()) return true;
+            try {
+                int value = Integer.parseInt(badges.get(0).getText());
+                return value == 0;
+            } catch (NumberFormatException e) {
+                return true;
+            }
+        });
     }
 
-    // Hapus banyak produk sekaligus
-    public void removeProductsFromCart(List<String> productNames) {
-        for (String product : productNames) {
-            removeProductFromCart(product);
-        }
-        // Tunggu badge update sesuai jumlah sisa produk
-        int remaining = getCurrentBadgeCount();
-        waitForCartBadgeCount(remaining);
-    }
-
-    // Validasi jumlah badge sesuai expected
-    public void validateCartBadge(int expectedCount) {
+    //validasi item keranjang
+    public void validateCartBadge(String expectedCount) {
         WebElement badge = wait.until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
-        assertEquals(String.valueOf(expectedCount), badge.getText(), "Cart badge count mismatch");
+        assertEquals(expectedCount, badge.getText(), "Cart badge count mismatch");
     }
 
-    // Validasi badge hilang atau nol
     public void validateCartBadgeNotVisible() {
         boolean invisible = wait.until(driver -> {
             List<WebElement> badges = driver.findElements(cartBadge);
             return badges.isEmpty() || badges.get(0).getText().equals("0");
         });
         assertTrue(invisible, "Cart badge should not be visible or zero");
-    }
-
-    // Utility: tunggu sampai badge mencapai jumlah tertentu
-    private void waitForCartBadgeCount(int expectedCount) {
-        wait.until(driver -> {
-            List<WebElement> badges = driver.findElements(cartBadge);
-            if (badges.isEmpty()) return expectedCount == 0;
-            try {
-                int value = Integer.parseInt(badges.get(0).getText());
-                return value == expectedCount;
-            } catch (NumberFormatException e) {
-                return expectedCount == 0;
-            }
-        });
-    }
-
-    // Utility: ambil jumlah badge saat ini
-    private int getCurrentBadgeCount() {
-        List<WebElement> badges = driver.findElements(cartBadge);
-        if (badges.isEmpty()) return 0;
-        try {
-            return Integer.parseInt(badges.get(0).getText());
-        } catch (NumberFormatException e) {
-            return 0;
-        }
     }
 }
