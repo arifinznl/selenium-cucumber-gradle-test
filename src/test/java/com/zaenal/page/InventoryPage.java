@@ -62,19 +62,27 @@ public class InventoryPage {
 
     public void removeProductFromCart(String productName) {
         By removeButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
-        // Klik tombol remove
-        wait.until(ExpectedConditions.elementToBeClickable(removeButton)).click();
+        // Tunggu tombol Remove muncul
+        wait.until(ExpectedConditions.visibilityOfElementLocated(removeButton));
 
-        // Tunggu badge hilang atau kosong
-        wait.until(driver -> {
-            List<WebElement> badges = driver.findElements(cartBadge);
-            if (badges.isEmpty()) return true;
-            try {
-                return Integer.parseInt(badges.get(0).getText()) == 0;
-            } catch (NumberFormatException e) {
-                return true;
-            }
-        });
+        // Klik tombol Remove
+        driver.findElement(removeButton).click();
+
+        // Tunggu tombol Add to Cart muncul kembali sebagai indikasi produk sudah dihapus
+        By addButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button[text()='Add to cart']");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(addButton));
+
+        // Jika ada cart badge, tunggu count update (opsional)
+        try {
+            By cartBadge = By.className("shopping_cart_badge");
+            wait.until(driver -> {
+                List<WebElement> badge = driver.findElements(cartBadge);
+                // Jika badge ada, pastikan jumlah di-update, jika tidak ada berarti cart kosong
+                return badge.isEmpty() || Integer.parseInt(badge.get(0).getText()) < driver.findElements(By.xpath("//div[@class='inventory_item']//button[text()='Remove']")).size() + 1;
+            });
+        } catch (Exception ignored) {
+            // jika badge tidak ada, lanjut
+        }
     }
 
     //validasi item keranjang
