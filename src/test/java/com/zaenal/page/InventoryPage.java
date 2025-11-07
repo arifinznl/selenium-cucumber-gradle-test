@@ -48,7 +48,7 @@ public class InventoryPage {
         wait.until(driver -> {
             List<WebElement> badges = driver.findElements(cartBadge);
             // Jika badge sudah hilang atau jumlah badge sesuai ekspektasi, lanjut
-            return badges.isEmpty() || Integer.parseInt(badges.get(0).getText()) >= 0;
+            return !badges.isEmpty() && Integer.parseInt(badges.get(0).getText()) == 1;
         });
 
     }
