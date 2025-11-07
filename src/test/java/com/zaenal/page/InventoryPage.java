@@ -45,8 +45,7 @@ public class InventoryPage {
         driver.findElement(removeButton).click();
 
         // wait sampai badge hilang
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.elementToBeClickable(removeButton)).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(cartBadge));
     }
 
