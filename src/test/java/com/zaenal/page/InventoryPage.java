@@ -3,7 +3,10 @@ package com.zaenal.page;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,6 +43,10 @@ public class InventoryPage {
     public void removeProductFromCart(String productName) {
         By removeButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
         driver.findElement(removeButton).click();
+
+        // wait sampai badge hilang
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(cartBadge));
     }
 
     //validasi item keranjang
