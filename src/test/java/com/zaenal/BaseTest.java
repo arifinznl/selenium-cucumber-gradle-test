@@ -11,7 +11,7 @@ public class BaseTest {
     protected static WebDriver driver;
 
     protected void getDriver() {
-        String browser = System.getProperty("browser", "firefox"); // default: chrome
+        String browser = System.getProperty("browser", "chrome"); // default: chrome
 //        ChromeOptions options = new ChromeOptions();
 //        options.addArguments("--headless");
 //        WebDriverManager.chromedriver().setup();
