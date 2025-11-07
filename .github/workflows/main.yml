@@ -43,6 +43,8 @@ jobs:
     # Execute gradle cucumber
     - name: Execute Test
       run: |
+        rm -rf reports/
+        mkdir -p reports/
         ./gradlew clean cucumber
 
     # Generate Allure Report
@@ -60,7 +62,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: cucumber-report
-        path: reports/
+        path: |
+          reports/cucumber.html
+          reports/cucumber.json
 
     # Upload Allure report
     - name: Upload Allure Results
