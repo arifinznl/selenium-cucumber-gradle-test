@@ -69,6 +69,7 @@ public class InventoryPage {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
 
     //validasi item keranjang
     public void validateCartBadge(String expectedCount) {
