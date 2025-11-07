@@ -38,6 +38,9 @@ public class InventoryPage {
     public void addProductToCart(String productName) {
         By addButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
         driver.findElement(addButton).click();
+        // Tunggu badge berubah
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+        .until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
     }
 
     public void removeProductFromCart(String productName) {
