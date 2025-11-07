@@ -39,35 +39,31 @@ public class InventoryPage {
     //locator dinamis
     public void addProductToCart(String productName) {
         By addButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
-        wait.until(ExpectedConditions.elementToBeClickable(addButton)).click();
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(addButton));
+        button.click();
 
-        // Tunggu badge muncul dan jumlah badge update
+        // Tunggu button berubah menjadi "Remove"
+        wait.until(ExpectedConditions.textToBePresentInElement(button, "Remove"));
+
+        // Tunggu badge muncul (optional tambahan safety)
         wait.until(driver -> {
             List<WebElement> badges = driver.findElements(cartBadge);
-            if (badges.isEmpty()) return false;
-            try {
-                int value = Integer.parseInt(badges.get(0).getText());
-                return value > 0;
-            } catch (NumberFormatException e) {
-                return false;
-            }
+            return !badges.isEmpty() && !badges.get(0).getText().isEmpty();
         });
     }
 
     public void removeProductFromCart(String productName) {
         By removeButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
-        wait.until(ExpectedConditions.elementToBeClickable(removeButton)).click();
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(removeButton));
+        button.click();
 
-        // Tunggu badge hilang atau kosong
+        // Tunggu button berubah menjadi "Add to cart"
+        wait.until(ExpectedConditions.textToBePresentInElement(button, "Add to cart"));
+
+        // Tunggu badge hilang atau nol
         wait.until(driver -> {
             List<WebElement> badges = driver.findElements(cartBadge);
-            if (badges.isEmpty()) return true;
-            try {
-                int value = Integer.parseInt(badges.get(0).getText());
-                return value == 0;
-            } catch (NumberFormatException e) {
-                return true;
-            }
+            return badges.isEmpty() || badges.get(0).getText().equals("0");
         });
     }
 
