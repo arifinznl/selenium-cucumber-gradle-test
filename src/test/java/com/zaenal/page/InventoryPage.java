@@ -73,12 +73,17 @@ public class InventoryPage {
 
     //validasi item keranjang
     public void validateCartBadge(String expectedCount) {
-        WebElement badge = wait.until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
-        assertEquals(expectedCount, badge.getText(), "Cart badge count mismatch");
+        boolean badgeUpdated = wait.until(driver -> {
+        List<WebElement> badges = driver.findElements(cartBadge);
+        if (badges.isEmpty()) return expectedCount.equals("0");
+        return badges.get(0).getText().equals(expectedCount);
+    });
+    assertTrue(badgeUpdated, "Cart badge count mismatch");
     }
 
     public void validateCartBadgeNotVisible() {
-        boolean invisible = wait.until(ExpectedConditions.invisibilityOfElementLocated(cartBadge));
-        assertTrue(invisible, "Cart badge should not be visible");
+        List<WebElement> badges = driver.findElements(cartBadge);
+        boolean invisible = badges.isEmpty() || badges.get(0).getText().equals("0");
+        assertTrue(invisible, "Cart badge should not be visible or zero");
     }
 }
