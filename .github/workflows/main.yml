@@ -14,6 +14,9 @@ on:
     branches: [ "master" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -41,6 +44,15 @@ jobs:
     - name: Execute Test
       run: ./gradlew cucumber
 
+    # Generate Allure Report
+    - name: Allure Report with history
+      if: always()  
+      uses: simple-elf/allure-report-action@v1.13
+      with:
+        allure_results: build/allure-results
+        allure_report: build/allure-report
+        allure_history: allure-history
+
     # Upload cucumber report
     - name: Upload Cucumber HTML report
       if: always()  
@@ -48,6 +60,23 @@ jobs:
       with:
         name: cucumber-report
         path: reports/
+
+    # Upload Allure report
+    - name: Upload Allure Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-report
+        path: build/allure-report/
+
+    # Deploy Allure report ke GitHub Pages
+    - name: Deploy Allure report to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: allure-history
+    
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
