@@ -43,7 +43,7 @@ jobs:
     # Execute gradle cucumber
     - name: Execute Test
       run: |
-        ./gradlew clean test || true
+        ./gradlew clean test cucumber || true
           mkdir -p build/allure-results
 
     # Generate Allure Report
@@ -61,7 +61,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: cucumber-report
-        path: build/reports/
+        path: build/reports/cucumber.html
 
     # Upload Allure report
     - name: Upload Allure Results
@@ -69,7 +69,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: allure-report
-        path: allure-report/
+        path: build/allure-report/
 
     # Deploy Allure report ke GitHub Pages
     - name: Deploy Allure report to GitHub Pages
