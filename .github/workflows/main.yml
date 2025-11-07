@@ -60,7 +60,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: cucumber-report
-        path: report/
+        path: reports/
 
     # Upload Allure report
     - name: Upload Allure Results
