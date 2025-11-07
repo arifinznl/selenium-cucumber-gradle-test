@@ -41,12 +41,14 @@ jobs:
       run: chmod +x gradlew
 
     # Allure Results folder
-    - name: Prepare Allure Results folder
-      run: mkdir -p build/allure-results
-
+    # - name: Prepare Allure Results folder
+    #   run: mkdir -p build/allure-results
+ 
     # Execute gradle cucumber
     - name: Execute Test
-      run: ./gradlew clean cucumber || true
+      run: |
+        ./gradlew clean cucumber || true
+        mkdir -p build/allure-results
 
     # Generate Allure Report
     - name: Allure Report with history
