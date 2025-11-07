@@ -46,7 +46,7 @@ jobs:
  
     # Execute gradle cucumber
     - name: Execute Test
-      run: ./gradlew clean cucumber || true
+      run: ./gradlew clean test || true
 
     # Generate Allure Report
     - name: Allure Report with history
