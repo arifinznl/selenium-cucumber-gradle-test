@@ -49,14 +49,14 @@ public class InventoryPage {
 
     //validasi item keranjang
     public void validateCartBadge(String expectedCount) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
-        WebElement badge = driver.findElement(cartBadge);
-        assertEquals(expectedCount, badge.getText(), "Jumlah item di cart badge tidak sesuai ekspektasi");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement badge = wait.until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
+        assertEquals(expectedCount, badge.getText());
     }
 
     public void validateCartBadgeNotVisible() {
-        // TImeout untuk menghindari false negative di UI
-        wait.withTimeout(Duration.ofSeconds(2));
-        assertTrue(driver.findElements(cartBadge).isEmpty(), "Cart badge should not be visible");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        boolean invisible = wait.until(ExpectedConditions.invisibilityOfElementLocated(cartBadge));
+        assertTrue(invisible, "Cart badge should not be visible");
     }
 }
