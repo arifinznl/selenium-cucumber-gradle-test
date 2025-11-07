@@ -10,29 +10,40 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class BaseTest {
     protected static WebDriver driver;
 
-    protected void getDriver() {
-        String browser = System.getProperty("browser", "chrome"); // default: chrome
-//        ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--headless");
+    public static WebDriver getDriver() {
+        if (driver == null) {
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless=new");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--disable-gpu");
 //        WebDriverManager.chromedriver().setup();
-//        driver = new ChromeDriver(options);
+            driver = new ChromeDriver(options);
+            driver.manage().window().maximize();
 
-//        driver = WebDriverManager.firefoxdriver().create();
-//        driver.manage().window().maximize();
+            }
+        return driver;
+    }
 
-        switch (browser.toLowerCase()){
-            case "chrome":
-                driver = WebDriverManager.chromedriver().create();
-                break;
-            case "firefox":
-                driver = WebDriverManager.firefoxdriver().create();
-                break;
-            case "edge":
-                driver = WebDriverManager.edgedriver().create();
-                break;
-            default:
-                driver = WebDriverManager.chromedriver().create();
-                break;
+    public static void quitDriver() {
+        if (driver != null) {
+            driver.quit();
+            driver = null;
+
+//        switch (browser.toLowerCase()){
+//            case "chrome":
+//                driver = WebDriverManager.chromedriver().create();
+//                break;
+//            case "firefox":
+//                driver = WebDriverManager.firefoxdriver().create();
+//                break;
+//            case "edge":
+//                driver = WebDriverManager.edgedriver().create();
+//                break;
+//            default:
+//                driver = WebDriverManager.chromedriver().create();
+//                break;
 
         }
     }
