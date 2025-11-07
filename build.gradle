@@ -49,7 +49,7 @@ task cucumber() {
                     '--plugin', 'html:report/test-report.html',
                     '--plugin', 'html:build/reports/cucumber/cucumber.html',
                     '--plugin', 'json:build/reports/cucumber/cucumber.json',
-                    '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm/allure-results',
+                    '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm:build/allure-results',
                     '--glue', 'com.zaenal',
                     '--tags', "${tags}",
                     'src/test/resources'
