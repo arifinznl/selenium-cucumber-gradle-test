@@ -25,9 +25,12 @@ dependencies {
 
 }
 
-//test {
-//    useJUnitPlatform()
-//}
+test {
+    useJUnit()
+    testLogging {
+        events "passed", "failed", "skipped"
+    }
+}
 
 configurations {
     cucumberRuntime {
