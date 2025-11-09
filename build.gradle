@@ -25,12 +25,12 @@ dependencies {
 
 }
 
-test {
-    useJUnit()
-    testLogging {
-        events "passed", "failed", "skipped"
-    }
-}
+//test {
+//    useJUnit()
+//    testLogging {
+//        events "passed", "failed", "skipped"
+//    }
+//}
 
 configurations {
     cucumberRuntime {
@@ -47,6 +47,7 @@ task cucumber() {
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            systemProperty "allure.results.directory", "build/allure-results"
             args = [
                     '--plugin', 'pretty',
                     '--plugin', 'html:build/reports/cucumber/cucumber.html',
