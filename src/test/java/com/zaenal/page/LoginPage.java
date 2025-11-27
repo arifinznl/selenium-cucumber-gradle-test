@@ -1,10 +1,8 @@
 package com.zaenal.page;
 
-import org.apache.hc.core5.http.Message;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginPage {
     WebDriver driver;
@@ -12,6 +10,7 @@ public class LoginPage {
     By usernameInputText = By.cssSelector("input#user-name");
     By passwordInputText = By.xpath("//*[@id=\"password\"]");
     By loginButton = By.id("login-button");
+    By errorMessageText = By.cssSelector("[data-test='error']");
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
@@ -33,7 +32,7 @@ public class LoginPage {
         driver.findElement(loginButton).click();
     }
 
-    public void validateErrorAppear(String errorMessage) {
-        assertTrue(driver.getPageSource().contains(errorMessage));
+    public String getErrorMessage() {
+        return driver.findElement(errorMessageText).getText();
     }
 }

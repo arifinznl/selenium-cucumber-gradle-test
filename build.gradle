@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'io.qameta.allure' version '2.11.2'
 }
 
 group = 'org.example'
@@ -11,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation('org.seleniumhq.selenium:selenium-java:4.35.0')
+    testImplementation('org.seleniumhq.selenium:selenium-java:4.34.0')
     testImplementation('io.github.bonigarcia:webdrivermanager:6.2.0')
 
     testImplementation 'io.cucumber:cucumber-java:7.8.1'
@@ -20,16 +19,10 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
 
-    // Allure untuk Cucumber 
-    testImplementation "io.qameta.allure:allure-cucumber7-jvm:2.24.0"
-
 }
 
 //test {
-//    useJUnit()
-//    testLogging {
-//        events "passed", "failed", "skipped"
-//    }
+//    useJUnitPlatform()
 //}
 
 configurations {
@@ -47,29 +40,13 @@ task cucumber() {
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            systemProperty "allure.results.directory", "build/allure-results"
             args = [
+                    '--plugin', 'html:report/test-report.html',
                     '--plugin', 'pretty',
-                    '--plugin', 'html:build/reports/cucumber/cucumber.html',
-                    '--plugin', 'json:build/reports/cucumber/cucumber.json',
-                    '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm',
                     '--glue', 'com.zaenal',
                     '--tags', "${tags}",
                     'src/test/resources'
             ]
         }
-    }
-}
-
-allure {
-    version = "2.24.0"
-    adapter {
-        frameworks {
-            cucumber7jvm {
-                adapterVersion = "2.24.0"
-            }
-        }
-        autoconfigure = true
-        aspectjweaver = true
     }
 }

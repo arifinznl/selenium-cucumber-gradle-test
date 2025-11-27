@@ -3,18 +3,11 @@ package com.zaenal.page;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InventoryPage {
     private WebDriver driver;
-    private WebDriverWait wait;
 
     // Locator
     private By productList = By.className("inventory_item");
@@ -22,40 +15,52 @@ public class InventoryPage {
 
     public InventoryPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
     //validasi
-    public void validateOnInventoryPage() {
-        assertTrue(driver.getCurrentUrl().contains("inventory.html"));
+//    public void validateOnInventoryPage() {
+//        assertTrue(driver.getCurrentUrl().contains("inventory.html"));
+//    }
+//
+//    //validasi produk muncul
+//    public void validateProductListVisible() {
+//        List<WebElement> products = driver.findElements(productList);
+//        assertTrue(products.size() > 0, "Product list should not be empty");
+//    }
+    public boolean isOnInventoryPage() {
+        return driver.getCurrentUrl().contains("inventory.html");
     }
 
-    //validasi produk muncul
-    public void validateProductListVisible() {
-        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(productList));
+    public boolean isProductListVisible() {
         List<WebElement> products = driver.findElements(productList);
-        assertTrue(products.size() > 0, "Product list should not be empty");
+        return products.size() > 0;
     }
-
     //locator dinamis
     public void addProductToCart(String productName) {
         By addButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
-        wait.until(ExpectedConditions.elementToBeClickable(addButton)).click();
+        driver.findElement(addButton).click();
     }
 
     public void removeProductFromCart(String productName) {
         By removeButton = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
-        wait.until(ExpectedConditions.elementToBeClickable(removeButton)).click();
+        driver.findElement(removeButton).click();
+
+    }
+    public String getCartBadgeText() {
+        return driver.findElement(cartBadge).getText();
+    }
+
+    public boolean isCartBadgeVisible() {
+        return driver.findElements(cartBadge).size() > 0;
     }
 
     //validasi item keranjang
-    public void validateCartBadge(String expectedCount) {
-        WebElement badge = wait.until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
-        assertEquals(expectedCount, badge.getText());
-    }
-
-    public void validateCartBadgeNotVisible() {
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(cartBadge));
-        assertTrue(driver.findElements(cartBadge).isEmpty(), "Cart badge should not be visible");
-    }
+//    public void validateCartBadge(String expectedCount) {
+//        WebElement badge = driver.findElement(cartBadge);
+//        assertEquals(expectedCount, badge.getText());
+//    }
+//
+//    public void validateCartBadgeNotVisible() {
+//        assertTrue(driver.findElements(cartBadge).isEmpty(), "Cart badge should not be visible");
+//    }
 }

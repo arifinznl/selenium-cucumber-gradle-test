@@ -6,15 +6,9 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 
 public class LoginStepDef extends BaseTest {
@@ -44,7 +38,7 @@ public class LoginStepDef extends BaseTest {
     }
 
     @Then("user able to see error message {string}")
-    public void userAbleToSeeErrorMessage(String errorMessage) {
-        loginPage.validateErrorAppear(errorMessage);
+    public void userAbleToSeeErrorMessage(String expectedMessage) {
+        assertEquals(expectedMessage, loginPage.getErrorMessage());
     }
 }

@@ -8,6 +8,10 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 public class InventoryStepDef extends BaseTest {
 
     InventoryPage inventoryPage;
@@ -16,13 +20,13 @@ public class InventoryStepDef extends BaseTest {
     @Then("user is on inventory page")
     public void userIsOnInventoryPage() {
         inventoryPage = new InventoryPage(driver);
-        inventoryPage.validateOnInventoryPage();
+        assertTrue("User is not on inventory page", inventoryPage.isOnInventoryPage());
     }
 
     @And("user can see product list")
     public void userCanSeeProductList() {
-        inventoryPage.validateProductListVisible();
-
+        assertTrue("Product list should be visible", inventoryPage.isProductListVisible());
+//        inventoryPage.validateProductListVisible();
     }
 
     @Given("user is logged in successfully")
@@ -33,8 +37,8 @@ public class InventoryStepDef extends BaseTest {
         loginPage.inputPassword("secret_sauce");
         loginPage.clickLoginButton();
         inventoryPage = new InventoryPage(driver);
-        inventoryPage.validateOnInventoryPage();
-
+        assertTrue("User failed to reach inventory page", inventoryPage.isOnInventoryPage());
+//        inventoryPage.validateOnInventoryPage();
     }
 
     @When("user add product {string} to cart")
@@ -44,7 +48,9 @@ public class InventoryStepDef extends BaseTest {
 
     @Then("cart badge should show {string}")
     public void cartBadgeShouldShow(String expectedCount) {
-        inventoryPage.validateCartBadge(expectedCount);
+        String actual = inventoryPage.getCartBadgeText();
+        assertEquals("Cart badge count mismatch", expectedCount, actual);
+//        inventoryPage.validateCartBadge(expectedCount);
     }
 
     @Given("user has added product {string} to cart")
@@ -60,6 +66,7 @@ public class InventoryStepDef extends BaseTest {
 
     @Then("cart badge should not be visible")
     public void cartBadgeShouldNotBeVisible() {
-        inventoryPage.validateCartBadgeNotVisible();
+        assertFalse(inventoryPage.isCartBadgeVisible(), "Cart badge should not be visible");
+//        inventoryPage.validateCartBadgeNotVisible();
     }
 }

@@ -9,11 +9,11 @@ import org.junit.runner.RunWith;
         glue = {"com.zaenal"},
         features = {"src/test/resources"},
         plugin = {"pretty",
-                  "html:reports/cucumber.html", 
-                  "json:reports/cucumber.json",
-                  "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
-                 }
+                "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",
+                "html:reports/cucumber.html",
+                "json:reports/cucumber.json"
 
+        }
 )
 public class CucumberTest {
 }
