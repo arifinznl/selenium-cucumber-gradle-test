@@ -9,12 +9,9 @@ import io.cucumber.java.en.When;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-
 public class LoginStepDef extends BaseTest {
 
     LoginPage loginPage;
-
 
     @Given("user is on login page")
     public void userIsOnLoginPage() {
